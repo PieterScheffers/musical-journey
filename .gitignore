@@ -1,0 +1,4 @@
+/.env.json
+/node_modules
+/ffmpeg-3.1.4-win64-static
+/mp3gain-win-1_2_5

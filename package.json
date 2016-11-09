@@ -1,0 +1,22 @@
+{
+  "name": "youtube_download",
+  "version": "1.0.0",
+  "description": "",
+  "main": "youtube.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "cheerio": "^0.22.0",
+    "empty-dir": "^0.2.1",
+    "ffmetadata": "^1.4.0",
+    "request": "^2.78.0",
+    "request-promise": "^4.1.1",
+    "sanitize-filename": "^1.6.1",
+    "youtube-search": "^1.0.6",
+    "ytdl-core": "^0.7.19"
+  }
+}
