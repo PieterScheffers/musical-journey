@@ -4,8 +4,9 @@ const ytSearch = require("./youtube-search");
 const mp4Tomp3 = require("./ffmpeg").mp4Tomp3;
 const mp3gain = require("./mp3gain");
 const emptyDir = require("empty-dir");
-const path = require("path");
-const writeMeta = require("./ffmetadata").writeMeta;
+// const writeMeta = require("./ffmetadata").writeMeta;
+const writeMeta = require('./ffmpeg').writeMeta;
+const config = require("./config");
 
 getSlam40Songs()
   .then(songs => {
@@ -35,12 +36,12 @@ getSlam40Songs()
           return mp3gain(audio).then(() => audio);
         })
         .then(audio => {
-          return writeMeta(audio, { artist: ytResult.song.artist, title: ytResult.song.title });
+          return writeMeta(audio, { album: "Slam!40", artist: ytResult.song.artist, title: ytResult.song.title });
         })
     }, Promise.resolve());
   })
   .then(() => {
-    emptyDir(path.join(__dirname, 'videos'), (err, result) => {
-
-    });
+    if( config.emptyVideoPath ) {
+      emptyDir(config.videoPath, (err, result) => {});
+    }
   });

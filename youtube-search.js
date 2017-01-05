@@ -5,7 +5,7 @@ const env = require("./.env.json");
 function youtubeSearch(query, opts) {
   opts = Object.assign({
     maxResults: 10,
-    key: env.youtubeApi.key
+    key: env.youtubeApiKey
   }, opts);
 
   return new Promise((resolve, reject) => {

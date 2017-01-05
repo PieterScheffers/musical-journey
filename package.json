@@ -13,6 +13,7 @@
     "cheerio": "^0.22.0",
     "empty-dir": "^0.2.1",
     "ffmetadata": "^1.4.0",
+    "moment": "^2.17.1",
     "request": "^2.78.0",
     "request-promise": "^4.1.1",
     "sanitize-filename": "^1.6.1",

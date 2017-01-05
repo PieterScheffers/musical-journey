@@ -4,23 +4,12 @@ const fs = require("fs");
 Promise.promisifyAll(fs);
 const path = require("path");
 const sanitizeFilename = require("sanitize-filename");
+const config = require("./config");
 
 exports.request = request;
 
-let cacheDir = path.join(__dirname, 'cache');
+let cacheDir = config.cachePath;
 const oneWeek = 604800000;
-
-function setCacheDir(path) {
-  const stats = fs.statSync(path);
-
-  if( !stats.isDirectory() ) {
-    throw new Error("setCacheDir - path is not a directory");
-  }
-
-  cacheDir = path;
-}
-
-exports.setCacheDir = setCacheDir;
 
 function cacheAvailable(file, time) {
   return fs.statAsync(file)
