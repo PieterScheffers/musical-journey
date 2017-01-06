@@ -8,6 +8,8 @@ function youtubeSearch(query, opts) {
     key: env.youtubeApiKey
   }, opts);
 
+  console.log("ytSearch", query, opts);
+
   return new Promise((resolve, reject) => {
     search(query, opts, function(err, results) {
       if(err) return reject(err);

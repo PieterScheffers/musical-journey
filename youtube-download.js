@@ -6,6 +6,7 @@ const sanitizeFilename = require("sanitize-filename");
 const videosDir = path.join(__dirname, 'videos');
 
 function ytDownload(url, song) {
+  console.log("ytDownload", url, song);
   return new Promise((resolve, reject) => {
 
     const video = path.join(videosDir, sanitizeFilename(`${song.artist} - ${song.title}.mp4`));
@@ -26,6 +27,8 @@ function ytDownload(url, song) {
 exports.ytDownload = ytDownload;
 
 function ytGetInfo(url, options) {
+  console.log("ytGetInfo", url, options);
+
   return new Promise((resolve, reject) => {
     ytdl.getInfo(url, options, (err, info) => {
       if( err ) return reject(err);
@@ -37,6 +40,8 @@ function ytGetInfo(url, options) {
 exports.ytGetInfo = ytGetInfo;
 
 function ytDownloadFromInfo(info, song, options) {
+  console.log('ytDownloadFromInfo', info, song, options);
+  
   return new Promise((resolve, reject) => {
 
     const video = path.join(videosDir, `${song.artist} - ${song.title}.mp4`);
