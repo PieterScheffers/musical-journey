@@ -5,17 +5,12 @@
 const path = require("path");
 const spawnResult = require('./spawnResult');
 const config = require("./config");
-const sanitizeFilename = require("sanitize-filename");
 
 const ffmpeg = config.ffmpeg;
-const audioDir = config.audioPath;
 
-function mp4Tomp3(videoPath) {
-  console.log("mp4Tomp3", path.parse(videoPath).base);
+function mp4Tomp3(videoPath, audioPath) {
+  console.log("mp4Tomp3", path.parse(videoPath).base, path.parse(audioPath).base);
   
-  const videoPathInfo = path.parse(videoPath);
-  const audioPath = path.join(audioDir, sanitizeFilename(`${videoPathInfo.name}.mp3`));
-
   // `${ffmpeg} -y -i "${videoPath}" -q:a 0 -map a "${audioPath}"`
   return spawnResult(ffmpeg, [ '-y', '-i', `"${videoPath}"`, '-q:a', '0', '-map', 'a', `"${audioPath}"`]);
 }

@@ -23,6 +23,16 @@ function stat(path) {
 }
 exports.stat = stat;
 
+function unlink(path) {
+  return new Promise((resolve, reject) => {
+    fs.unlink(path, (err) => {
+      if(err) return reject(err);
+      resolve(true);
+    });
+  });
+}
+exports.unlink = unlink;
+
 /**
  * Recursively checks if a directory contains a file
  */

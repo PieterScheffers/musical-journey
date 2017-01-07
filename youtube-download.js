@@ -1,15 +1,13 @@
 const ytdl = require('ytdl-core');
 const path = require("path");
 const fs = require("fs");
-const sanitizeFilename = require("sanitize-filename");
 
 const videosDir = path.join(__dirname, 'videos');
 
-function ytDownload(url, song) {
-  console.log("ytDownload", url, song);
+function ytDownload(url, video) {
+  console.log("ytDownload", url, video);
   return new Promise((resolve, reject) => {
 
-    const video = path.join(videosDir, sanitizeFilename(`${song.artist} - ${song.title}.mp4`));
     const writeStream = fs.createWriteStream(video);
 
     writeStream.on('finish', () => {
