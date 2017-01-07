@@ -53,8 +53,3 @@ function containsFile(dir, file) {
   })
 }
 exports.containsFile = containsFile;
-
-containsFile(__dirname, 'C:\\Users\\piete_000\\Desktop\\youtube_download\\ffmpeg-3.1.4-win64-static\\README.txt')
-.then(files => {
-  console.log({files})
-})
