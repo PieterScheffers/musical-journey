@@ -36,21 +36,25 @@ function containsFile(dir, file) {
     return Promise.all(stats.map(s => {
       const base = path.parse(s.fullPath).base;
 
-      if( s.isDirectory() && base !== 'node_modules' ) return containsFile(s.fullPath, file);
+      if( s.isDirectory() ) return containsFile(s.fullPath, file);
 
-      if (isWindows) {
-        return Promise.resolve(s.isFile() && base.toLowerCase() == path.parse(file).base.toLowerCase());
+      if( s.isFile() ) {
+        if (base == path.parse(file).base || 
+           (isWindows && base.toLowerCase() == path.parse(file).base.toLowerCase()) ) {
+          return Promise.resolve([ s.fullPath ]);
+        }
       }
 
-      return Promise.resolve(s.isFile() && base == path.parse(file).base);      
+      return Promise.resolve([]);
     }));
   })
-  .then(bools => {
-    for (let i = 0; i < bools.length; i++) {
-      if( bools[i] ) return true;
-    }
-
-    return false;
+  .then(arrays => {
+    return [].concat(...arrays);
   })
 }
 exports.containsFile = containsFile;
+
+containsFile(__dirname, 'C:\\Users\\piete_000\\Desktop\\youtube_download\\ffmpeg-3.1.4-win64-static\\README.txt')
+.then(files => {
+  console.log({files})
+})
