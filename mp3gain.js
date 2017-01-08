@@ -15,7 +15,7 @@ function mp3gain(file) {
   const a = isWindows ? '/' : '-';
   // `${mp3gainExe} ${a}d 9.0 ${a}r ${a}p ${a}c "${file}"`
   
-  return spawnResult(mp3gainExe, [ `${a}d`, '9.0', `${a}r`, `${a}p`, `${a}c`, `"${file}"` ]);
+  return spawnResult(mp3gainExe, [ `${a}d`, '9.0', `${a}r`, `${a}p`, `${a}c`, file ]);
 }
 
 module.exports = mp3gain;

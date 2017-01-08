@@ -6,6 +6,7 @@ function getConfig() {
     youtubeApiKey: "",
     mp3gain: path.join(__dirname, 'mp3gain-win-1_2_5', 'mp3gain.exe'),
     ffmpeg: path.join(__dirname, 'ffmpeg-3.1.4-win64-static', 'bin', 'ffmpeg.exe'),
+    id3tool: path.join(__dirname, 'id3tool-1.2a-win32-x86', 'id3tool.exe'),
     videoPath: path.join(__dirname, 'videos'),
     audioPath: path.join(__dirname, 'audio'),
     cachePath: path.join(__dirname, 'cache'),

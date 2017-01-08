@@ -12,7 +12,7 @@ function mp4Tomp3(videoPath, audioPath) {
   console.log("mp4Tomp3", path.parse(videoPath).base, path.parse(audioPath).base);
   
   // `${ffmpeg} -y -i "${videoPath}" -q:a 0 -map a "${audioPath}"`
-  return spawnResult(ffmpeg, [ '-y', '-i', `"${videoPath}"`, '-q:a', '0', '-map', 'a', `"${audioPath}"`]);
+  return spawnResult(ffmpeg, [ '-y', '-i', videoPath, '-q:a', '0', '-map', 'a', audioPath ]).then(() => audioPath);
 }
 exports.mp4Tomp3 = mp4Tomp3;
 
@@ -21,7 +21,7 @@ const metadataKeys = [
   'TIT3', // subtitle
   'artist',
   'album_artist',
-  'album',
+  // 'album',
   'date',
   'track',
   'genre',
@@ -46,14 +46,15 @@ function writeMeta(audioPath, data) {
     .filter(k => metadataKeys.includes(k))
     .map(k => `-metadata ${k}="${data[k]}"`);
 
-  const writeCmd = [].concat(['-y', '-i', `"${audioPath}"` ], metaData, [ `"${audioPath}"` ]);
-  const convertCmd = ['-y', '-i', `"${audioPath}"`, '-id3v2_version', '3', '-write_id3v1', '1', `"${audioPath}"` ];
+  const writeCmd = [].concat(['-y', '-i', audioPath ], metaData, [ audioPath ]);
+  const convertCmd = ['-y', '-i', audioPath, '-id3v2_version', '3', '-write_id3v1', '1', audioPath ];
 
   // write metadata
-  return spawnResult(ffmpeg, writeCmd)
-  .then(() => {
-    return spawnResult(ffmpeg, convertCmd);
-  });
+  // return spawnResult(ffmpeg, writeCmd)
+  // .then(() => {
+  //   return spawnResult(ffmpeg, convertCmd);
+  // });
+  return Promise.resolve();
 
 }
 exports.writeMeta = writeMeta;

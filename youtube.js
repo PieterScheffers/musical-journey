@@ -1,3 +1,5 @@
+const mkdirp = require('mkdirp-promise');
+const moment = require('moment');
 const ytDownload = require("./youtube-download").ytDownload;
 const getSlam40Songs = require("./slam40");
 const ytSearch = require("./youtube-search");
@@ -9,10 +11,12 @@ const writeMeta = require('./ffmpeg').writeMeta;
 const config = require("./config");
 const containsFile = require("./file").containsFile;
 const unlink = require('./file').unlink;
-const moment = require('moment');
 const audioMp3 = require('./paths').audioMp3;
 const getPathToVideo = require('./paths').getPathToVideo;
 const getPathToAudio = require('./paths').getPathToAudio;
+const getPathToAudioFolder = require('./paths').getPathToAudioFolder;
+const getPathToVideoFolder = require('./paths').getPathToVideoFolder;
+const id3tool = require("./id3tool");
 
 // function downloadSong(name, args) {
 //   const defArgs = {
@@ -30,6 +34,16 @@ const getPathToAudio = require('./paths').getPathToAudio;
 //   ytSearch(name, { maxResults: 1 })
 // }
 
+function createDirs(subFolder = '') {
+  if( subFolder ) {
+    const audioFolder = getPathToAudioFolder(subFolder);
+    const videoFolder = getPathToVideoFolder(subFolder);
+
+    return Promise.all([ mkdirp(audioFolder), mkdirp(videoFolder) ]);
+  }
+
+  return Promise.resolve();
+}
 
 function searchSong(song) {
   // search youtube api for song
@@ -65,27 +79,44 @@ getSlam40Songs()
 })
 // search for, download mp4 video, convert to mp3 and mp3gain all songs that doesn't exist yet
 .then(songs => {
+  if( !songs.length ) {
+    console.log("All songs already done. Exiting...")
+    return Promise.resolve();
+  }
+
   const subFolder = config.divideAudioInWeeks ? `Slam40 ${moment().format('YYYY-ww')}` : '';
+
+  // create subfolders
+  // use this promise to start promise reduce
+  const prom = createDirs(subFolder);
 
   // serially
   return songs.reduce((promise, s) => {
     const videoPath = getPathToVideo(s.artist, s.title, subFolder);
     const audioPath = getPathToAudio(s.artist, s.title, subFolder);
 
+    console.log("song", s);
+
     // return a promise
     return promise.then(() => {
       // search youtube api for song
-      searchSong(s)
+      return searchSong(s)
       // get link to video
-      .then(ytRes => ytRes.link)
+      .then(ytRes => {
+        console.log("ytRes.song", ytRes.song);
+        return ytRes.link
+      })
       // download video
       .then(link => ytDownload(link, videoPath))
       // convert mp4 video to mp3 audio
       .then(video => {
-        mp4Tomp3(video, audioPath)
+        console.log("VIDEO", video);
+        return mp4Tomp3(video, audioPath)
         .then(audio => {
+          console.log("AUDIO", audio)
           // delete video file if in config to do so
           if( config.emptyVideoPath ) {
+            console.log("deleting video", video);
             return unlink(video).then(() => audio);
           }
 
@@ -95,11 +126,12 @@ getSlam40Songs()
       // apply volume leveling with mp3gain to mp3
       .then(audio => mp3gain(audio).then(() => audio))
       // write metadata to mp3
-      .then(audio => writeMeta(audio, { album: "Slam!40", artist: s.artist, title: s.title }))
+      // .then(audio => writeMeta(audio, { album: "Slam40", artist: s.artist, title: s.title }));
+      .then(audio => id3tool(audio, { album: "Slam40", artist: s.artist, title: s.title }));
 
     });
 
-  }, Promise.resolve([]));
+  }, prom);
 
 })
 

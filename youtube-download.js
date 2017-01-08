@@ -14,12 +14,20 @@ function ytDownload(url, video) {
       resolve(video);
     });
 
-    ytdl(url, { filter: function(format) { return format.container === 'mp4'; } })
-      .pipe(writeStream)
-      .once("error", (error) => {
-        reject(error);
-      });
+    writeStream.once('error', err => {
+      console.error("ytDownload writeStream error:", err);
+      reject(err);
+    });
 
+    const downloadStream = ytdl(url, { filter: function(format) { return format.container === 'mp4'; } });
+
+    downloadStream.once('error', err => {
+      console.error("ytDownload downloadstream error:", err);
+      reject(err);
+    });
+
+    // pipe download to video file
+    downloadStream.pipe(writeStream);
   });
 }
 exports.ytDownload = ytDownload;

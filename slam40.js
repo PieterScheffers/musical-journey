@@ -13,7 +13,9 @@ function getSlam40Songs() {
 //   <a class="spotify-play" href="7lQqaqZu0vjxzpdATOIsDt"><span class="icon fa"><img src="http://www.slam.nl/wp-content/themes/slam-gsys/images/playicon-yellow.png" alt="play"></span></a>
 // </div>
 
-  return requestWithCache("http://www.slam.nl/slam40/")
+  const interval = 64800000; // 18 hours
+
+  return requestWithCache("http://www.slam.nl/slam40/", interval)
     .then(body => cheerio.load(body))
     .then($ => {
       const songs = [];

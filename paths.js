@@ -6,12 +6,12 @@ const videoDir = config.videoPath;
 const audioDir = config.audioPath;
 
 function audioMp3(artist, title) {
-  return sanitizeFilename(artist + ' ' + title + '.mp3');
+  return sanitizeFilename(artist + ' - ' + title + '.mp3');
 }
 exports.audioMp3 = audioMp3;
 
 function videoMp4(artist, title) {
-  return sanitizeFilename(artist + ' ' + title + '.mp4');
+  return sanitizeFilename(artist + ' - ' + title + '.mp4');
 }
 exports.videoMp4 = videoMp4;
 
@@ -32,3 +32,21 @@ function getPathToAudio(artist, title, subFolder = '') {
   return path.join(audioDir, audioMp3(artist, title));
 }
 exports.getPathToAudio = getPathToAudio;
+
+function getPathToAudioFolder(subFolder = '') {
+  if( subFolder ) {
+    return path.join(audioDir, subFolder);
+  }
+
+  return audioDir;
+}
+exports.getPathToAudioFolder = getPathToAudioFolder;
+
+function getPathToVideoFolder(subFolder = '') {
+  if( subFolder ) {
+    return path.join(videoDir, subFolder);
+  }
+
+  return videoDir;
+}
+exports.getPathToVideoFolder = getPathToVideoFolder;
